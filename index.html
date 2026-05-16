@@ -177,7 +177,10 @@
       padding: 1.2rem 1.4rem;
       font-size: 0.88rem;
       color: var(--muted);
+      display: block;
+      transition: border-color .2s, box-shadow .2s;
     }
+    .cert-card:hover { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); text-decoration: none; }
     .cert-card strong { display: block; color: var(--text); margin-bottom: 0.25rem; font-size: 0.9rem; }
 
     /* ── EDUCATION ── */
@@ -419,22 +422,22 @@
     <p class="section-label">Credentials</p>
     <h2>Certifications</h2>
     <div class="cert-grid">
-      <div class="cert-card">
+      <a class="cert-card" href="https://www.youracclaim.com/badges/3455a375-79db-423c-9dc7-2d7cf8fe572b?source=linked_in_profile&trk=public_profile_see-credential" target="_blank" rel="noopener">
         <strong>MCSA: SQL 2016 Database Administration</strong>
         Certified 2020
-      </div>
-      <div class="cert-card">
+      </a>
+      <a class="cert-card" href="https://www.youracclaim.com/badges/61cf4c1b-df9a-415f-85d9-a55f2986778c?source=linked_in_profile&trk=public_profile_see-credential" target="_blank" rel="noopener">
         <strong>CompTIA Network+</strong>
         CompTIA
-      </div>
-      <div class="cert-card">
+      </a>
+      <a class="cert-card" href="https://candidate.peoplecert.org/MobileReports.aspx?id=40A47E5AE86A7508CB9A3FA2A629636CA5A0806476B7B6F6045B5256D69D4AAE16B18241D19401A4D6F5C08ADA7F22842AEDF93ECA11EEAE24D49EB31DF135F80B35CFDC17F6F021DF50C71A6D65E7FE4E906867F1D0702C53F7D0BF665079EBCBEE8ADE&trk=public_profile_see-credential" target="_blank" rel="noopener">
         <strong>CompTIA Security+</strong>
         CompTIA
-      </div>
-      <div class="cert-card">
+      </a>
+      <a class="cert-card" href="https://www.youracclaim.com/badges/723e5bbd-e258-42f4-a9c8-5dfdbc23832f?source=linked_in_profile&trk=public_profile_see-credential" target="_blank" rel="noopener">
         <strong>MTA: Windows Server Administration Fundamentals</strong>
         Microsoft Technology Associate
-      </div>
+      </a>
     </div>
   </div>
 </section>
