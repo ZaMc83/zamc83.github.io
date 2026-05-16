@@ -1,10 +1,462 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>My Website</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Zachary McClurg — Senior Software Engineer</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0d1117;
+      --surface: #161b22;
+      --border: #30363d;
+      --accent: #58a6ff;
+      --accent2: #3fb950;
+      --text: #e6edf3;
+      --muted: #8b949e;
+      --tag-bg: #1f2937;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      line-height: 1.6;
+    }
+
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* ── NAV ── */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(13,17,23,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 56px;
+    }
+    nav .logo { font-weight: 700; font-size: 1.1rem; letter-spacing: -0.3px; }
+    nav ul { list-style: none; display: flex; gap: 1.8rem; }
+    nav ul a { color: var(--muted); font-size: 0.9rem; transition: color .2s; }
+    nav ul a:hover { color: var(--text); text-decoration: none; }
+
+    /* ── HERO ── */
+    .hero {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 5rem 2rem 4rem;
+    }
+    .hero .eyebrow {
+      color: var(--accent2);
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-bottom: 0.75rem;
+    }
+    .hero h1 {
+      font-size: clamp(2.2rem, 5vw, 3.4rem);
+      font-weight: 800;
+      line-height: 1.15;
+      letter-spacing: -1px;
+      margin-bottom: 1rem;
+    }
+    .hero h1 span { color: var(--accent); }
+    .hero .subtitle {
+      color: var(--muted);
+      font-size: 1.1rem;
+      max-width: 640px;
+      margin-bottom: 2rem;
+    }
+    .hero .contacts {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      align-items: center;
+      font-size: 0.9rem;
+    }
+    .hero .contacts a, .hero .contacts span {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      color: var(--muted);
+    }
+    .hero .contacts a:hover { color: var(--accent); text-decoration: none; }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.55rem 1.2rem;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      transition: opacity .2s;
+    }
+    .btn:hover { opacity: 0.85; text-decoration: none; }
+    .btn-primary { background: var(--accent); color: #0d1117; }
+    .btn-outline { border: 1px solid var(--border); color: var(--text); }
+
+    /* ── SECTIONS ── */
+    section { padding: 5rem 2rem; }
+    .container { max-width: 860px; margin: 0 auto; }
+    .section-label {
+      color: var(--accent);
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+    }
+    h2 {
+      font-size: 1.9rem;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      margin-bottom: 2.5rem;
+    }
+
+    /* ── SKILLS ── */
+    #skills { background: var(--surface); }
+    .skill-groups { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.5rem; }
+    .skill-card {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.4rem;
+    }
+    .skill-card h3 { font-size: 0.9rem; font-weight: 700; color: var(--accent2); margin-bottom: 0.9rem; }
+    .tags { display: flex; flex-wrap: wrap; gap: 0.45rem; }
+    .tag {
+      background: var(--tag-bg);
+      color: var(--muted);
+      font-size: 0.78rem;
+      padding: 0.25rem 0.65rem;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+    }
+
+    /* ── EXPERIENCE ── */
+    .timeline { display: flex; flex-direction: column; gap: 2.5rem; }
+    .job {
+      border-left: 2px solid var(--border);
+      padding-left: 1.5rem;
+      position: relative;
+    }
+    .job::before {
+      content: '';
+      position: absolute;
+      left: -5px;
+      top: 6px;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent);
+    }
+    .job-header { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 0.5rem; margin-bottom: 0.3rem; }
+    .job-title { font-size: 1.1rem; font-weight: 700; }
+    .job-company { color: var(--accent); font-weight: 600; }
+    .job-meta { color: var(--muted); font-size: 0.82rem; white-space: nowrap; }
+    .job ul { margin-top: 0.8rem; padding-left: 1.2rem; color: var(--muted); font-size: 0.9rem; display: flex; flex-direction: column; gap: 0.4rem; }
+    .job ul li::marker { color: var(--accent2); }
+
+    /* ── CERTIFICATIONS ── */
+    #certifications { background: var(--surface); }
+    .cert-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; }
+    .cert-card {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.2rem 1.4rem;
+      font-size: 0.88rem;
+      color: var(--muted);
+    }
+    .cert-card strong { display: block; color: var(--text); margin-bottom: 0.25rem; font-size: 0.9rem; }
+
+    /* ── EDUCATION ── */
+    .edu-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.6rem;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 1rem;
+    }
+    .edu-card h3 { font-size: 1.05rem; font-weight: 700; }
+    .edu-card p { color: var(--muted); font-size: 0.9rem; margin-top: 0.25rem; }
+    .edu-date { color: var(--muted); font-size: 0.82rem; white-space: nowrap; }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2rem;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+
+    @media (max-width: 600px) {
+      nav ul { gap: 1rem; }
+      .hero { padding-top: 3rem; }
+    }
+  </style>
 </head>
 <body>
-  <h1>Hello World</h1>
-  <p>This is my personal website.</p>
+
+<nav>
+  <span class="logo">ZM</span>
+  <ul>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#certifications">Certs</a></li>
+    <li><a href="#education">Education</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<header class="hero">
+  <p class="eyebrow">Available for new opportunities</p>
+  <h1>Zachary <span>McClurg</span></h1>
+  <p class="subtitle">
+    Senior Software &amp; Cloud Engineer specializing in secure, scalable AWS infrastructure,
+    multi-agent AI platforms, RAG pipelines, and high-throughput real-time services.
+  </p>
+  <div class="contacts">
+    <a href="mailto:zamclurg83@outlook.com">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+      zamclurg83@outlook.com
+    </a>
+    <span>
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.14 13 19.79 19.79 0 0 1 1.08 4.32A2 2 0 0 1 3 2.1h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 21 16.92z"/></svg>
+      +1 850-988-4352
+    </span>
+    <span>
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+      Godley, Texas
+    </span>
+    <a href="https://linkedin.com/in/zach-mcclurg-529a9340a" target="_blank" rel="noopener">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg>
+      LinkedIn
+    </a>
+  </div>
+</header>
+
+<!-- SKILLS -->
+<section id="skills">
+  <div class="container">
+    <p class="section-label">Expertise</p>
+    <h2>Skills &amp; Technologies</h2>
+    <div class="skill-groups">
+
+      <div class="skill-card">
+        <h3>Cloud &amp; DevOps</h3>
+        <div class="tags">
+          <span class="tag">AWS Lambda</span><span class="tag">ECS / EKS</span><span class="tag">API Gateway</span>
+          <span class="tag">S3</span><span class="tag">DynamoDB</span><span class="tag">CloudWatch</span>
+          <span class="tag">Bedrock</span><span class="tag">Kendra</span><span class="tag">GCP Cloud Run</span>
+          <span class="tag">BigQuery</span><span class="tag">Docker</span><span class="tag">Kubernetes</span>
+          <span class="tag">GitHub Actions</span><span class="tag">GitLab CI</span><span class="tag">AWS CodePipeline</span>
+          <span class="tag">AWS CDK (TypeScript)</span><span class="tag">Terraform</span>
+          <span class="tag">VPC Isolation</span><span class="tag">IAM</span>
+        </div>
+      </div>
+
+      <div class="skill-card">
+        <h3>Backend &amp; AI Engineering</h3>
+        <div class="tags">
+          <span class="tag">Python</span><span class="tag">TypeScript</span><span class="tag">Node.js</span>
+          <span class="tag">Java / Spring Boot</span><span class="tag">FastAPI</span><span class="tag">NestJS</span>
+          <span class="tag">Multi-Agent Systems (MCP)</span><span class="tag">RAG Pipelines</span>
+          <span class="tag">LangChain</span><span class="tag">Pinecone</span><span class="tag">Vector Search</span>
+          <span class="tag">GPT-4</span><span class="tag">Claude</span><span class="tag">Mistral</span><span class="tag">Gemini</span>
+          <span class="tag">Step Functions</span><span class="tag">EventBridge</span><span class="tag">SQS / SNS</span>
+        </div>
+      </div>
+
+      <div class="skill-card">
+        <h3>Data &amp; Storage</h3>
+        <div class="tags">
+          <span class="tag">PostgreSQL</span><span class="tag">MySQL</span><span class="tag">Snowflake</span>
+          <span class="tag">Redis</span><span class="tag">DynamoDB</span><span class="tag">Data Modeling</span>
+          <span class="tag">ETL Pipelines</span><span class="tag">PySpark</span><span class="tag">AWS EMR</span>
+          <span class="tag">PHI Masking</span><span class="tag">Data Governance</span>
+        </div>
+      </div>
+
+      <div class="skill-card">
+        <h3>Frontend &amp; Real-Time</h3>
+        <div class="tags">
+          <span class="tag">React</span><span class="tag">Next.js</span><span class="tag">TypeScript</span>
+          <span class="tag">LiveKit</span><span class="tag">WebSockets</span>
+          <span class="tag">Retell.ai</span><span class="tag">Deepgram (ASR)</span><span class="tag">ElevenLabs (TTS)</span>
+        </div>
+      </div>
+
+      <div class="skill-card">
+        <h3>Security &amp; Compliance</h3>
+        <div class="tags">
+          <span class="tag">NIST 800-53</span><span class="tag">SOC 2</span><span class="tag">HIPAA</span>
+          <span class="tag">STIG Compliance</span><span class="tag">AWS Security Hub</span>
+          <span class="tag">KMS Encryption</span><span class="tag">Secret Management</span>
+          <span class="tag">Audit Logging</span><span class="tag">OpenTelemetry</span>
+        </div>
+      </div>
+
+      <div class="skill-card">
+        <h3>Practices</h3>
+        <div class="tags">
+          <span class="tag">Agile / Scrum</span><span class="tag">TDD</span><span class="tag">System Observability</span>
+          <span class="tag">Microservices</span><span class="tag">Domain-Driven Design</span>
+          <span class="tag">Technical Leadership</span><span class="tag">Mentoring</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- EXPERIENCE -->
+<section id="experience">
+  <div class="container">
+    <p class="section-label">Career</p>
+    <h2>Experience</h2>
+    <div class="timeline">
+
+      <div class="job">
+        <div class="job-header">
+          <div>
+            <span class="job-title">Senior Software Engineer</span>
+            &mdash;
+            <span class="job-company">Databackfill</span>
+          </div>
+          <span class="job-meta">Mar 2025 – Mar 2026 &nbsp;·&nbsp; Remote</span>
+        </div>
+        <ul>
+          <li>Architected and deployed an MCP-based multi-agent AI platform on AWS ECS/EKS, orchestrating autonomous agents (GPT-4, Claude, Mistral) to resolve customer inquiries, reducing manual operational effort by over 50% through dynamic task routing based on latency and cost metrics.</li>
+          <li>Engineered secure, low-latency cloud infrastructure using AWS CDK (TypeScript) and Terraform, enforcing VPC isolation, KMS-encrypted S3 buckets, and least-privilege IAM roles to ensure full compliance with SOC 2 and HIPAA standards.</li>
+          <li>Built a clinical-grade RAG pipeline integrating LangChain, Pinecone, and PostgreSQL, optimizing vector retrieval from 10M+ documents to achieve sub-200ms response times and boosting answer relevance by 35% through metadata-aware semantic chunking.</li>
+          <li>Developed real-time voice interface services using LiveKit and WebSockets, integrated with Deepgram (ASR) and ElevenLabs (TTS) for natural, sub-second conversational AI interactions deployed via AWS Lambda and API Gateway.</li>
+          <li>Designed event-driven automation workflows using AWS Step Functions and EventBridge to trigger agent workflows, audit logging, and notifications with comprehensive CloudWatch monitoring.</li>
+          <li>Led a cross-functional team of 3–5 engineers, driving sprint planning, code reviews, and architectural decisions while mentoring junior developers on TypeScript, Python, and cloud security best practices.</li>
+          <li>Integrated AWS AI Services including Bedrock for managed LLM access and Kendra for enterprise search fallbacks, ensuring high availability for critical AI-driven features in production.</li>
+        </ul>
+      </div>
+
+      <div class="job">
+        <div class="job-header">
+          <div>
+            <span class="job-title">DevOps Engineer</span>
+            &mdash;
+            <span class="job-company">Easy Dynamics Corp</span>
+          </div>
+          <span class="job-meta">Aug 2022 – Mar 2025 &nbsp;·&nbsp; Texas</span>
+        </div>
+        <ul>
+          <li>Developed and deployed cloud infrastructure using AWS CDK with TypeScript; built and managed ECS clusters with full GitLab/AWS CI/CD pipelines.</li>
+          <li>Used Terraform to build out ECS containers and tasks using ECR images; configured GitHub Workflows to build and push Docker images to Elastic Container Registry.</li>
+          <li>Engineered CI/CD processes via AWS Pipeline, CodeCommit, and GitLab through AWS CDK and Terraform pipelines.</li>
+          <li>Constructed and maintained AWS environments in compliance with NIST 800-53 and STIG standards.</li>
+          <li>Led the migration of organizational repositories and AWS pipelines from GitHub to GitLab.</li>
+          <li>Designed and deployed a REST API Gateway in AWS for Lambda function GET calls; developed and deployed custom Lambda functions in Python.</li>
+          <li>Deployed Kubernetes clusters on AWS EC2 instances and assisted in configuring AWS Network Firewall.</li>
+        </ul>
+      </div>
+
+      <div class="job">
+        <div class="job-header">
+          <div>
+            <span class="job-title">Cloud Infrastructure Engineer</span>
+            &mdash;
+            <span class="job-company">American Century Investments</span>
+          </div>
+          <span class="job-meta">May 2021 – Aug 2022</span>
+        </div>
+        <ul>
+          <li>Managed CI/CD deployments using GitHub, AWS CodePipeline, CodeCommit, CodeBuild, and CodeDeploy.</li>
+          <li>Configured Storage Gateways to connect AWS S3 and Azure BLOB Storage for hybrid backup solutions.</li>
+          <li>Deployed Web Applications and Static Websites using Elastic Beanstalk; developed CloudFormation templates for storage and testing environments.</li>
+          <li>Configured EC2 instances for Auto-Scaling Groups and Application Load Balancers to test internal traffic handling.</li>
+          <li>Worked with Kubernetes and Docker images for microservices, clusters, and application deployments.</li>
+        </ul>
+      </div>
+
+      <div class="job">
+        <div class="job-header">
+          <div>
+            <span class="job-title">System Administrator</span>
+            &mdash;
+            <span class="job-company">Wise Health System</span>
+          </div>
+          <span class="job-meta">Nov 2018 – May 2021 &nbsp;·&nbsp; Decatur, Texas</span>
+        </div>
+        <ul>
+          <li>Automated manual tasks using PowerShell and Python such as Distribution Groups and Email Notifications, minimizing repetitive resource utilization.</li>
+          <li>Configured Windows Server roles including Active Directory, Exchange, DFS, ADFS, and IIS.</li>
+          <li>Monitored VMware environments and managed resource pools, VM tools, and daily administrative tasks.</li>
+          <li>Built multiple SQL Server instances supporting applications and IIS websites; ensured database efficiency via proper indexing, fragmentation management, and backups.</li>
+          <li>Played a key role in the organization's migration to O365, including Exchange admin tasks, Azure AD synchronization, and MFA implementation.</li>
+          <li>Deployed NAS and SAN storage solutions; managed Distributed File System and led SharePoint migration of on-prem file shares.</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- CERTIFICATIONS -->
+<section id="certifications">
+  <div class="container">
+    <p class="section-label">Credentials</p>
+    <h2>Certifications</h2>
+    <div class="cert-grid">
+      <div class="cert-card">
+        <strong>MCSA: SQL 2016 Database Administration</strong>
+        Certified 2020
+      </div>
+      <div class="cert-card">
+        <strong>CompTIA Network+</strong>
+        CompTIA
+      </div>
+      <div class="cert-card">
+        <strong>CompTIA Security+</strong>
+        CompTIA
+      </div>
+      <div class="cert-card">
+        <strong>MTA: Windows Server Administration Fundamentals</strong>
+        Microsoft Technology Associate
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EDUCATION -->
+<section id="education">
+  <div class="container">
+    <p class="section-label">Academic</p>
+    <h2>Education</h2>
+    <div class="edu-card">
+      <div>
+        <h3>Bachelor's Degree, Cloud Computing</h3>
+        <p>Western Governors University</p>
+      </div>
+      <span class="edu-date">Aug 2018 – Jan 2022</span>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>&copy; 2026 Zachary McClurg &nbsp;·&nbsp; Godley, Texas</p>
+</footer>
+
 </body>
 </html>
