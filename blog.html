@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Blog — Zachary McClurg</title>
+<meta name="description" content="Notes on multi-agent orchestration, MCP, and the practical edges of building production AI systems." />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --navy-950: #070b14;
+    --navy-900: #0a0f1e;
+    --navy-800: #101a30;
+    --ink: #10162a;
+    --muted: #5b6472;
+    --bg: #ffffff;
+    --surface: #f5f7fb;
+    --border: #e4e8f0;
+    --accent: #2454e8;
+    --accent-ink: #17348f;
+    --accent-soft: #eaf0ff;
+    --teal: #0d9c93;
+    --teal-soft: #e3f8f6;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  img { display: block; max-width: 100%; }
+
+  /* ── NAV ── */
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(255,255,255,0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 60px;
+  }
+  nav .logo { font-weight: 800; font-size: 1.05rem; letter-spacing: -0.3px; color: var(--ink); }
+  nav .logo span { color: var(--accent); }
+  nav ul { list-style: none; display: flex; gap: 1.7rem; align-items: center; }
+  nav ul a { color: var(--muted); font-size: 0.9rem; font-weight: 500; transition: color .2s; }
+  nav ul a:hover { color: var(--ink); text-decoration: none; }
+  nav ul a.active { color: var(--ink); }
+  nav .nav-cta {
+    background: var(--ink);
+    color: #fff !important;
+    padding: 0.5rem 1.1rem;
+    border-radius: 7px;
+    font-size: 0.85rem;
+    font-weight: 600;
+  }
+  nav .nav-cta:hover { background: var(--accent); text-decoration: none; }
+
+  /* ── PAGE HEADER ── */
+  .page-header {
+    background: radial-gradient(circle at 20% 15%, var(--navy-800), var(--navy-950) 75%);
+    color: #fff;
+    padding: 4.5rem 2rem 3.5rem;
+  }
+  .page-header .inner { max-width: 900px; margin: 0 auto; }
+  .page-header .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #7dd3fc;
+    background: rgba(125,211,252,0.1);
+    border: 1px solid rgba(125,211,252,0.3);
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 0.4rem 0.9rem;
+    border-radius: 30px;
+    margin-bottom: 1.2rem;
+  }
+  .page-header h1 {
+    font-size: clamp(2rem, 4.5vw, 2.8rem);
+    font-weight: 800;
+    letter-spacing: -1px;
+    margin-bottom: 0.9rem;
+  }
+  .page-header p { color: #b9c3d6; font-size: 1.05rem; max-width: 680px; }
+
+  /* ── ARTICLES ── */
+  .articles {
+    max-width: 820px;
+    margin: 0 auto;
+    padding: 4rem 2rem 5.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 3.5rem;
+  }
+  article.post {
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+    background: #fff;
+  }
+  article.post .cover { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; background: var(--surface); }
+  article.post .body { padding: 2.2rem 2.2rem 2.5rem; }
+  .post-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    flex-wrap: wrap;
+    margin-bottom: 1rem;
+  }
+  .post-tag {
+    background: var(--teal-soft);
+    color: var(--teal);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    padding: 0.25rem 0.65rem;
+    border-radius: 20px;
+  }
+  .post-readtime { color: var(--muted); font-size: 0.82rem; }
+  article.post h2 {
+    font-size: 1.55rem;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    margin-bottom: 1.1rem;
+    line-height: 1.25;
+  }
+  article.post .lede {
+    color: var(--muted);
+    font-size: 1rem;
+    margin-bottom: 1.3rem;
+  }
+  .source-quote {
+    border-left: 3px solid var(--accent);
+    background: var(--accent-soft);
+    padding: 0.9rem 1.1rem;
+    border-radius: 0 8px 8px 0;
+    font-size: 0.92rem;
+    color: var(--accent-ink);
+    margin-bottom: 1.4rem;
+  }
+  .source-quote a { font-weight: 600; }
+  article.post p { color: var(--ink); font-size: 0.97rem; margin-bottom: 1.1rem; }
+  article.post p:last-child { margin-bottom: 0; }
+  article.post strong { color: var(--ink); }
+  .img-credit {
+    text-align: right;
+    font-size: 0.72rem;
+    color: var(--muted);
+    padding: 0.5rem 2.2rem 0;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--navy-950);
+    color: #8b96ac;
+    padding: 2.5rem 2rem;
+    text-align: center;
+    font-size: 0.85rem;
+  }
+  footer .foot-links { display: flex; justify-content: center; gap: 1.3rem; margin-bottom: 1rem; flex-wrap: wrap; }
+  footer a { color: #b9c3d6; }
+  footer a:hover { color: #7dd3fc; }
+
+  @media (max-width: 720px) {
+    nav ul { gap: 1rem; }
+    nav ul li:not(:last-child) { display: none; }
+    article.post .body { padding: 1.6rem 1.4rem 2rem; }
+    .img-credit { padding-right: 1.4rem; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="logo" href="index.html">Zachary <span>McClurg</span></a>
+  <ul>
+    <li><a href="index.html#skills">Skills</a></li>
+    <li><a href="index.html#experience">Experience</a></li>
+    <li><a href="blog.html" class="active">Blog</a></li>
+    <li><a class="nav-cta" href="mailto:zach.ja.mc@outlook.com">Get in Touch</a></li>
+  </ul>
+</nav>
+
+<header class="page-header">
+  <div class="inner">
+    <p class="eyebrow"><span>&#128172;</span> Field Notes</p>
+    <h1>Notes on Multi-Agent Orchestration &amp; MCP</h1>
+    <p>
+      Three underrated reads from X, each paired with what I've actually seen building multi-agent systems
+      on Model Context Protocol at production scale &mdash; not the viral takes, just the ones worth your time.
+    </p>
+  </div>
+</header>
+
+<main class="articles">
+
+  <!-- ARTICLE 1 -->
+  <article class="post">
+    <img class="cover" src="images/blog-multi-agent-lessons.jpg" alt="Two engineers working on a server rack in a data center" loading="lazy">
+    <div class="img-credit">Photo: NASA Glenn Research Center &mdash; public domain, via Wikimedia Commons</div>
+    <div class="body">
+      <div class="post-meta">
+        <span class="post-tag">Underrated Read</span>
+        <span class="post-readtime">5 min read</span>
+      </div>
+      <h2>What Multi-Agent Orchestration Actually Costs You</h2>
+      <p class="lede">A quiet post about "landing the plane" with Claude Code agents says more about production multi-agent systems than most of the threads that go viral.</p>
+      <div class="source-quote">
+        Philosopher and independent researcher Seth Lazar (<a href="https://x.com/sethlazar" target="_blank" rel="noopener">@sethlazar</a>) put it plainly in
+        <a href="https://x.com/sethlazar/status/2006214936603844668" target="_blank" rel="noopener">a recent post</a>:
+        &ldquo;Finally got a handle on multi-agent orchestration with Claude Code. It's extremely easy to mess up (and use LOADS of compute for nowt). But also possible to land the plane.&rdquo;
+      </div>
+      <p>That line undersells how common the failure mode is. The default instinct when a task feels big is to fan it out &mdash; spin up a planner, a handful of workers, a reviewer &mdash; and let them go. What actually happens is redundant sub-agents re-deriving the same context, recursive delegation with no depth cap, and a token bill that has nothing to do with the value delivered.</p>
+      <p>We hit the same wall building the multi-agent layer at Databackfill, where GPT-4o and Claude 3.5 agents handle autonomous audience segmentation and tool execution for 50,000+ B2B users. The fix wasn't a smarter model, it was scoping: each agent gets a narrow role and a hard budget, shared state moves through LangGraph checkpoints instead of being re-explained in every prompt, and a router picks the cheapest model that can still hit the accuracy bar for a given step. That's most of where a 30% cut in monthly LLM spend actually came from &mdash; not fewer agents, fewer wasted turns between them.</p>
+      <p><strong>The practical takeaway:</strong> before adding another agent to a flow, ask what shared state it needs and whether it can read that state instead of asking another agent to summarize it. Most "multi-agent" cost problems are context-passing problems wearing an orchestration costume.</p>
+    </div>
+  </article>
+
+  <!-- ARTICLE 2 -->
+  <article class="post">
+    <img class="cover" src="images/blog-mcp-protocol.jpg" alt="A densely cabled network switch rack" loading="lazy">
+    <div class="img-credit">Photo: Jon Parise, CC BY-SA 2.0, via Wikimedia Commons</div>
+    <div class="body">
+      <div class="post-meta">
+        <span class="post-tag">Underrated Read</span>
+        <span class="post-readtime">4 min read</span>
+      </div>
+      <h2>Why MCP Is the Protocol Multi-Agent Systems Actually Needed</h2>
+      <p class="lede">Before you can orchestrate agents, they have to agree on how to talk to tools and each other. Most teams learn this the expensive way.</p>
+      <div class="source-quote">
+        As <a href="https://x.com/sinthive" target="_blank" rel="noopener">@sinthive</a> wrote in
+        <a href="https://x.com/sinthive/status/1950590738879721794" target="_blank" rel="noopener">a short breakdown on X</a>:
+        &ldquo;AI agents are evolving beyond standalone models &mdash; their power now lies in how they connect. Model Context Protocol enables agents to share context and act as a unified system.&rdquo;
+      </div>
+      <p>That cable-rack photo above isn't subtle, but it's an honest picture of what agent tooling looked like before something like MCP: every agent framework wired to every tool with its own bespoke adapter, auth flow, and schema. Add a CRM, add a data warehouse, add a new agent, and the number of point-to-point integrations grows faster than the value they produce.</p>
+      <p>Standardizing on MCP is what let us collapse that mess when we built event-driven sync engines pulling 1M+ daily events from Salesforce and HubSpot into the same agent tool-calling surface used by GPT-4o and Claude 3.5. One protocol, one audit trail, one place to enforce guardrails and decision tracing &mdash; instead of re-implementing logging and access control per integration. It's less exciting than a new agent framework, but it's the reason the framework doesn't fall over at 50,000 users.</p>
+      <p><strong>The practical takeaway:</strong> if your multi-agent roadmap has more custom tool integrations than agents, the protocol layer is the actual bottleneck, not the model.</p>
+    </div>
+  </article>
+
+  <!-- ARTICLE 3 -->
+  <article class="post">
+    <img class="cover" src="images/blog-agent-orchestration-ux.jpg" alt="NASA flight directors monitoring consoles in Mission Control" loading="lazy">
+    <div class="img-credit">Photo: NASA / Robert Markowitz, public domain, via Wikimedia Commons</div>
+    <div class="body">
+      <div class="post-meta">
+        <span class="post-tag">Underrated Read</span>
+        <span class="post-readtime">4 min read</span>
+      </div>
+      <h2>The Multi-Agent UX Problem Nobody's Solved Yet</h2>
+      <p class="lede">A bold prediction about agentic UX buried a real, unresolved question: what does it look like to actually watch a multi-agent system work?</p>
+      <div class="source-quote">
+        Developer <a href="https://x.com/arafatkatze" target="_blank" rel="noopener">@arafatkatze</a> argued in
+        <a href="https://x.com/arafatkatze/status/2037188879422292467" target="_blank" rel="noopener">a recent post</a> that
+        &ldquo;this form factor of multi agent orchestration will overtake every other agentic UX in the next six months &hellip; every multi agent flow of frontier models currently suffers.&rdquo;
+      </div>
+      <p>Whether or not the timeline holds, the underlying observation is right: most multi-agent tools still treat the user like they're watching a black box. A task goes in, a handful of agents do something for a while, and an answer comes out. When it's wrong, there's no way to tell which agent's context went stale, which handoff dropped a constraint, or where a retry loop quietly burned five minutes.</p>
+      <p>Mission Control is a useful reference point precisely because it's the opposite of a black box &mdash; every console shows exactly what its operator is tracking, in real time, with a clear handoff protocol between roles. That's the bar we aimed for building the AI inference dashboards at Databackfill: live token utilization, data-sync status, and per-agent decision tracing surfaced in the same Next.js interface users already lived in, not a separate debug tool nobody opens until something breaks. It's a big part of why engagement went up 40% after we shipped it &mdash; visibility turned out to matter as much as accuracy.</p>
+      <p><strong>The practical takeaway:</strong> if users can't see which agent did what and why, "multi-agent" is a backend implementation detail, not a product feature yet.</p>
+    </div>
+  </article>
+
+</main>
+
+<footer>
+  <div class="foot-links">
+    <a href="mailto:zach.ja.mc@outlook.com">Email</a>
+    <a href="https://linkedin.com/in/zach-mc-741a09416" target="_blank" rel="noopener">LinkedIn</a>
+    <a href="https://github.com/ZaMc83" target="_blank" rel="noopener">GitHub</a>
+  </div>
+  <p>&copy; 2026 Zachary McClurg &nbsp;&middot;&nbsp; Ocala, FL</p>
+</footer>
+
+</body>
+</html>
