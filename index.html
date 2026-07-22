@@ -71,7 +71,10 @@
   /* ── HERO ── */
   .hero-wrap {
     position: relative;
-    background: radial-gradient(circle at 20% 15%, var(--navy-800), var(--navy-950) 65%);
+    background:
+      linear-gradient(180deg, rgba(7,11,20,0.6) 0%, rgba(7,11,20,0.75) 100%),
+      url('images/hero-datacenter.jpg') center 40%/cover no-repeat,
+      radial-gradient(circle at 20% 15%, var(--navy-800), var(--navy-950) 65%);
     overflow: hidden;
   }
   .hero-wrap canvas {
@@ -87,6 +90,14 @@
     background: linear-gradient(180deg, rgba(7,11,20,0.15) 0%, rgba(7,11,20,0.55) 75%, rgba(7,11,20,0.92) 100%);
     pointer-events: none;
   }
+  .hero-credit {
+    position: relative;
+    z-index: 2;
+    font-size: 0.68rem;
+    color: rgba(255,255,255,0.35);
+    margin-top: 1.6rem;
+  }
+  .hero-credit a { color: rgba(255,255,255,0.5); }
   .hero {
     position: relative;
     z-index: 2;
@@ -200,6 +211,13 @@
   }
   h2 { font-size: 1.85rem; font-weight: 800; letter-spacing: -0.5px; color: var(--ink); }
   .lede { color: var(--muted); max-width: 700px; margin-top: 1rem; font-size: 0.98rem; }
+
+  /* ── MEDIA / PHOTO CREDITS ── */
+  figure.media-block { margin: 0 0 2rem; }
+  figure.media-block img { width: 100%; height: 100%; object-fit: cover; border-radius: 14px; display: block; }
+  figure.media-block figcaption { text-align: right; font-size: 0.72rem; color: var(--muted); margin-top: 0.5rem; }
+  .section-banner { aspect-ratio: 21 / 6; }
+  .job-cover { aspect-ratio: 21 / 8; margin-bottom: 1.3rem; }
 
   /* ── SKILLS ── */
   #skills { background: var(--surface); }
@@ -378,6 +396,7 @@
         LinkedIn
       </a>
     </div>
+    <p class="hero-credit">Background: BalticServers.com, <a href="https://creativecommons.org/licenses/by-sa/3.0/" target="_blank" rel="noopener">CC BY-SA 3.0</a>, via Wikimedia Commons</p>
   </header>
   <div class="stats">
     <div class="stats-grid">
@@ -401,6 +420,10 @@
         <h2>Skills &amp; Technologies</h2>
       </div>
     </div>
+    <figure class="media-block section-banner">
+      <img src="images/skills-circuitboard.jpg" alt="Macro close-up of electronic components on a circuit board" loading="lazy">
+      <figcaption>Photo: Ingo Dierking, CC BY-SA 4.0, via Wikimedia Commons</figcaption>
+    </figure>
     <div class="skill-groups">
 
       <div class="skill-card">
@@ -537,6 +560,10 @@
     <div class="timeline">
 
       <div class="job">
+        <figure class="media-block job-cover">
+          <img src="images/job-databackfill-gpu.jpg" alt="Rows of GPU compute servers in a data center rack" loading="lazy">
+          <figcaption>Photo: CSIRO, CC BY 3.0, via Wikimedia Commons</figcaption>
+        </figure>
         <div class="job-top">
           <div class="job-id">
             <div class="job-icon">
@@ -560,6 +587,10 @@
       </div>
 
       <div class="job">
+        <figure class="media-block job-cover">
+          <img src="images/job-salesforce-tower.jpg" alt="Salesforce Tower skyscraper in downtown San Francisco" loading="lazy">
+          <figcaption>Photo: homebucket, CC BY-SA 2.0, via Wikimedia Commons</figcaption>
+        </figure>
         <div class="job-top">
           <div class="job-id">
             <div class="job-icon">
@@ -583,6 +614,10 @@
       </div>
 
       <div class="job">
+        <figure class="media-block job-cover">
+          <img src="images/job-wisehealth-medical.jpg" alt="Bright, modern medical office interior" loading="lazy">
+          <figcaption>Photo: Shixart1985, CC BY 2.0, via Wikimedia Commons</figcaption>
+        </figure>
         <div class="job-top">
           <div class="job-id">
             <div class="job-icon">
