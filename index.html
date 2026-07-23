@@ -199,7 +199,9 @@
     background: var(--accent-soft);
     color: var(--accent);
     display: flex; align-items: center; justify-content: center;
+    transition: transform .3s cubic-bezier(.34,1.56,.64,1);
   }
+  .section-head:hover .section-icon { transform: scale(1.12) rotate(-8deg); }
   .section-icon svg { width: 22px; height: 22px; }
   .section-label {
     color: var(--accent);
@@ -235,7 +237,9 @@
     width: 34px; height: 34px; border-radius: 8px;
     background: var(--teal-soft); color: var(--teal);
     display: flex; align-items: center; justify-content: center;
+    transition: transform .3s cubic-bezier(.34,1.56,.64,1);
   }
+  .skill-card:hover .icon-badge { transform: scale(1.15) rotate(-8deg); }
   .skill-card .icon-badge svg { width: 18px; height: 18px; }
   .skill-card h3 { font-size: 0.95rem; font-weight: 700; color: var(--ink); }
   .tags { display: flex; flex-wrap: wrap; gap: 0.45rem; }
@@ -255,7 +259,9 @@
     border: 1px solid var(--border);
     border-radius: 14px;
     padding: 2rem;
+    transition: box-shadow .2s, border-color .2s;
   }
+  .job:hover { box-shadow: 0 8px 24px rgba(16,22,42,0.06); border-color: #d2d9e6; }
   .job-top { display: flex; gap: 1rem; align-items: flex-start; margin-bottom: 1.2rem; flex-wrap: wrap; justify-content: space-between; }
   .job-id { display: flex; gap: 1rem; align-items: center; }
   .job-icon {
@@ -263,7 +269,9 @@
     width: 46px; height: 46px; border-radius: 10px;
     background: var(--accent-soft); color: var(--accent-ink);
     display: flex; align-items: center; justify-content: center;
+    transition: transform .3s cubic-bezier(.34,1.56,.64,1);
   }
+  .job:hover .job-icon, .edu-card:hover .job-icon { transform: scale(1.15) rotate(8deg); }
   .job-icon svg { width: 24px; height: 24px; }
   .job-title { font-size: 1.12rem; font-weight: 700; color: var(--ink); }
   .job-company { color: var(--accent); font-weight: 600; font-size: 0.95rem; }
@@ -293,7 +301,9 @@
     width: 32px; height: 32px; border-radius: 8px;
     background: var(--teal-soft); color: var(--teal);
     display: flex; align-items: center; justify-content: center;
+    transition: transform .3s cubic-bezier(.34,1.56,.64,1);
   }
+  .cert-card:hover .cert-badge { transform: scale(1.15) rotate(-8deg); }
   .cert-badge svg { width: 17px; height: 17px; }
   .cert-card strong { display: block; color: var(--ink); margin-bottom: 0.2rem; font-size: 0.92rem; }
   .cert-latest { position: relative; border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent-soft); }
@@ -317,7 +327,9 @@
     flex-wrap: wrap;
     justify-content: space-between;
     align-items: center;
+    transition: box-shadow .2s, border-color .2s;
   }
+  .edu-card:hover { box-shadow: 0 8px 24px rgba(16,22,42,0.06); border-color: #d2d9e6; }
   .edu-id { display: flex; gap: 1rem; align-items: center; }
   .edu-card h3 { font-size: 1.05rem; font-weight: 700; color: var(--ink); }
   .edu-card p { color: var(--muted); font-size: 0.9rem; margin-top: 0.2rem; }
@@ -798,6 +810,64 @@
   window.addEventListener('resize', resize);
   resize();
   frame();
+})();
+
+(function () {
+  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var badges = document.querySelectorAll('.section-icon svg, .icon-badge svg, .job-icon svg, .cert-badge svg');
+  if (!badges.length) return;
+
+  function prepIcon(svg) {
+    var shapes = svg.querySelectorAll('path, circle, rect, ellipse, line, polyline, polygon');
+    shapes.forEach(function (shape) {
+      var isFilled = shape.getAttribute('fill') === 'currentColor';
+      if (isFilled) {
+        shape.style.opacity = 0;
+        return;
+      }
+      if (typeof shape.getTotalLength !== 'function') return;
+      try {
+        var len = shape.getTotalLength();
+        if (!len) return;
+        shape.style.strokeDasharray = len;
+        shape.style.strokeDashoffset = len;
+      } catch (e) {}
+    });
+  }
+
+  function drawIcon(svg) {
+    var shapes = svg.querySelectorAll('path, circle, rect, ellipse, line, polyline, polygon');
+    shapes.forEach(function (shape, i) {
+      var delay = (i * 90) + 'ms';
+      shape.style.transition = 'stroke-dashoffset .8s cubic-bezier(.4,0,.2,1) ' + delay + ', opacity .5s ease ' + delay;
+      requestAnimationFrame(function () {
+        shape.style.strokeDashoffset = 0;
+        shape.style.opacity = 1;
+      });
+    });
+  }
+
+  if (reduceMotion) {
+    badges.forEach(function (svg) {
+      svg.querySelectorAll('path, circle, rect, ellipse, line, polyline, polygon').forEach(function (shape) {
+        shape.style.opacity = 1;
+      });
+    });
+    return;
+  }
+
+  badges.forEach(prepIcon);
+
+  var observer = new IntersectionObserver(function (entries) {
+    entries.forEach(function (entry) {
+      if (entry.isIntersecting) {
+        drawIcon(entry.target);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.3 });
+
+  badges.forEach(function (svg) { observer.observe(svg); });
 })();
 </script>
 
